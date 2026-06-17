@@ -1,0 +1,181 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: #f0f2f5;
+  height: 100vh;
+}
+
+.container {
+  display: flex;
+  height: 100vh;
+}
+
+.sidebar {
+  width: 300px;
+  background: #1a1a2e;
+  color: #fff;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar h1 {
+  font-size: 24px;
+  margin-bottom: 4px;
+}
+
+.subtitle {
+  font-size: 13px;
+  color: #888;
+  margin-bottom: 24px;
+}
+
+.agents-section h2 {
+  font-size: 14px;
+  color: #888;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+#agents {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.agent-item {
+  background: rgba(255,255,255,0.05);
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 8px;
+}
+
+.agent-item .name {
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+.agent-item .great {
+  font-size: 12px;
+  color: #aaa;
+  line-height: 1.4;
+}
+
+.error {
+  color: #ff6b6b;
+  font-size: 13px;
+}
+
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+}
+
+.message {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.message.user {
+  flex-direction: row-reverse;
+}
+
+.avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #4361ee;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.message.user .avatar {
+  background: #7209b7;
+}
+
+.bubble {
+  max-width: 480px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  line-height: 1.5;
+  font-size: 14px;
+}
+
+.message.user .bubble {
+  background: #4361ee;
+  color: #fff;
+}
+
+.result-card h3 {
+  font-size: 18px;
+  margin-bottom: 8px;
+  color: #1a1a2e;
+}
+
+.result-card .label {
+  font-weight: 600;
+  color: #4361ee;
+  font-size: 12px;
+}
+
+.result-card p {
+  margin-bottom: 8px;
+  color: #333;
+}
+
+.input-area {
+  display: flex;
+  gap: 8px;
+  padding: 16px 24px;
+  border-top: 1px solid #e0e0e0;
+  background: #fff;
+}
+
+.input-area input {
+  flex: 1;
+  padding: 12px 16px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+}
+
+.input-area input:focus {
+  border-color: #4361ee;
+}
+
+.input-area button {
+  padding: 12px 24px;
+  background: #4361ee;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.input-area button:hover {
+  background: #3651d4;
+}

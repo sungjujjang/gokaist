@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gokaist - AI 도구 추천</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar">
+      <h1>Gokaist</h1>
+      <p class="subtitle">AI 도구 추천 챗봇</p>
+      <div class="agents-section">
+        <h2>등록된 AI 도구</h2>
+        <div id="agents"></div>
+      </div>
+    </aside>
+    <main class="main">
+      <div id="messages" class="messages"></div>
+      <form id="searchForm" class="input-area">
+        <input id="query" type="text" placeholder="무엇을 하고 싶으신가요?" autofocus>
+        <button type="submit">검색</button>
+      </form>
+    </main>
+  </div>
+  <script src="/script.js"></script>
+</body>
+</html>
