@@ -43,18 +43,13 @@ app.get('/api/agents', async (req, res) => {
 
 app.post('/api/v1/search', async (req, res) => {
   try {
-    const { query } = req.body;
+    const { query, persona } = req.body;
     if (!query) return res.status(400).json({ error: 'query is required' });
 
     const agents = await db.getAllAgents();
     const agentsInfo = agents.map(a => `${a.name}: ${a.great}`).join('\n');
 
-    const completion = await groq.chat.completions.create({
-      model: 'llama-3.3-70b-versatile',
-      messages: [
-        {
-          role: 'system',
-          content: `You are an AI tool recommendation expert. Given a user's needs, recommend the most suitable AI tool from the list below.
+    let systemContent = `You are an AI tool recommendation expert. Given a user's needs, recommend the most suitable AI tool from the list below.
 
 Available AI tools:
 ${agentsInfo}
@@ -64,8 +59,28 @@ Respond in JSON format only:
   "name": "AI tool name (in Korean)",
   "reason": "Why this tool is recommended (in Korean)",
   "tip": "Usage tip for this tool (in Korean)"
-}`
-        },
+}`;
+
+    if (persona) {
+      systemContent = `You are an AI tool recommendation expert. Given a user's needs, recommend the most suitable AI tool from the list below.
+
+The user describes themselves as: ${persona}
+
+Available AI tools:
+${agentsInfo}
+
+Respond in JSON format only:
+{
+  "name": "AI tool name (in Korean)",
+  "reason": "Why this tool is recommended, considering the user's persona (in Korean)",
+  "tip": "Usage tip for this tool (in Korean)"
+}`;
+    }
+
+    const completion = await groq.chat.completions.create({
+      model: 'llama-3.3-70b-versatile',
+      messages: [
+        { role: 'system', content: systemContent },
         { role: 'user', content: query }
       ],
       response_format: { type: 'json_object' }
@@ -113,6 +128,10 @@ app.delete('/api/v1/admin/ai/:name', requireAdmin, async (req, res) => {
 
 app.get('/admin', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'admin.html'));
+});
+
+app.get('/second', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'second.html'));
 });
 
 app.get('/{*path}', (req, res) => {

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SearchAI &mdash; Explorer</title>
+  <link rel="stylesheet" href="/second.css">
+</head>
+<body>
+
+<div class="app">
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="topbar-left">
+        <span class="topbar-logo">S</span>
+        <span class="topbar-name">SearchAI</span>
+      </div>
+      <nav class="topbar-nav">
+        <a href="/" class="topbar-link">채팅</a>
+        <a href="/second" class="topbar-link is-active">탐색</a>
+        <a href="/admin" class="topbar-link">관리</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="shell">
+    <aside class="sidebar">
+      <div class="sidebar-head">
+        <h2 class="sidebar-title">기록</h2>
+        <button id="clearBtn" class="sidebar-clear">비우기</button>
+      </div>
+      <div id="historyList" class="sidebar-list"></div>
+      <div id="emptyHistory" class="sidebar-empty">
+        <p>아직 기록이 없습니다</p>
+      </div>
+    </aside>
+
+    <main class="stage">
+      <div class="stage-center">
+        <div id="cardDisplay" class="card-zone">
+          <div class="empty-well">
+            <div class="empty-mark">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </div>
+            <h3>도구를 찾아보세요</h3>
+            <p>검색어를 입력하면 추천 결과를 카드로 보여드려요</p>
+          </div>
+        </div>
+
+        <form id="searchForm" class="search-area">
+          <div class="search-row">
+            <input id="query" type="text" placeholder="원하는 작업을 입력하세요" autofocus>
+            <button type="submit">찾기</button>
+          </div>
+          <div class="persona-wrap">
+            <button type="button" id="personaToggle" class="persona-toggle">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              내 정보 입력하기 <span class="persona-badge">선택</span>
+            </button>
+            <div id="personaPanel" class="persona-panel">
+              <div class="persona-fields">
+                <div class="persona-field">
+                  <label>직업</label>
+                  <input id="personaJob" type="text" placeholder="예: 대학생, 개발자, 디자이너">
+                </div>
+                <div class="persona-field">
+                  <label>나이</label>
+                  <input id="personaAge" type="text" placeholder="예: 25, 30대">
+                </div>
+                <div class="persona-field">
+                  <label>관심 분야</label>
+                  <input id="personaInterest" type="text" placeholder="예: 디자인, 영상 편집">
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script src="/second.js"></script>
+</body>
+</html>
