@@ -7,23 +7,39 @@
   <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-  <div class="container">
-    <aside class="sidebar">
-      <h1>SearchAI</h1>
-      <p class="subtitle">AI 도구 추천 챗봇</p>
-      <div class="agents-section">
-        <h2>등록된 AI 도구</h2>
-        <div id="agents"></div>
+  <div class="app">
+    <header class="topbar">
+      <div class="topbar-inner">
+        <div class="topbar-left">
+          <span class="topbar-logo">S</span>
+          <span class="topbar-name">SearchAI</span>
+        </div>
+        <nav class="topbar-nav">
+          <a href="/" class="topbar-link is-active">채팅</a>
+          <a href="/second" class="topbar-link">탐색</a>
+          <a href="/admin" class="topbar-link">관리</a>
+        </nav>
       </div>
-      <button id="resetChat" class="reset-btn">채팅 초기화</button>
-    </aside>
-    <main class="main">
-      <div id="messages" class="messages"></div>
-      <form id="searchForm" class="input-area">
-        <input id="query" type="text" placeholder="무엇을 하고 싶으신가요?" autofocus>
-        <button type="submit">검색</button>
-      </form>
-    </main>
+    </header>
+
+    <div class="container">
+      <aside class="sidebar">
+        <h1>SearchAI</h1>
+        <p class="subtitle">AI 도구 추천 챗봇</p>
+        <div class="agents-section">
+          <h2>등록된 AI 도구</h2>
+          <div id="agents"></div>
+        </div>
+        <button id="resetChat" class="reset-btn">채팅 초기화</button>
+      </aside>
+      <main class="main">
+        <div id="messages" class="messages"></div>
+        <form id="searchForm" class="input-area">
+          <input id="query" type="text" placeholder="무엇을 하고 싶으신가요?" autofocus>
+          <button type="submit">검색</button>
+        </form>
+      </main>
+    </div>
   </div>
   <script src="/script.js"></script>
 </body>
