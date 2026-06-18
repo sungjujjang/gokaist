@@ -7,6 +7,8 @@ on:
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
+    env:
+      ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -47,5 +49,5 @@ jobs:
           git config user.name "JANG SEONG JU"
           git config user.email "printhelloworld0702@gmail.com"
           git add k8s/deployment.yaml
-          git commit -m "chore: update searchai${{ steps.tag.outputs.tag }}"
+          git commit -m "chore: update searchai image tag to ${{ steps.tag.outputs.tag }}"
           git push
