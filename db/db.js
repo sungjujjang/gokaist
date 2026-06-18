@@ -1,5 +1,6 @@
 require('dotenv').config();
 const { createClient } = require('@supabase/supabase-js');
+const WebSocket = require('ws');
 const aiData = require('../ai.json');
 
 const supabaseUrl = process.env.SUPABASE_URL;
@@ -14,7 +15,9 @@ if (!supabaseKey) {
   process.exit(1);
 }
 
-const supabase = createClient(supabaseUrl, supabaseKey);
+const supabase = createClient(supabaseUrl, supabaseKey, {
+  realtime: { transport: WebSocket }
+});
 
 async function initDB() {
   const { error } = await supabase.from('agents').select('*', { count: 'exact', head: true });
