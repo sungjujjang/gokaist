@@ -9,6 +9,7 @@ const STORAGE_KEY = 'searchai_chat_history';
 function saveHistory() {
   const items = [];
   messagesEl.querySelectorAll('.message').forEach(el => {
+    if (el.dataset.streaming) return;
     const role = el.classList.contains('user') ? 'user' : 'assistant';
     const bubble = el.querySelector('.bubble');
     const resultCard = bubble?.querySelector('.result-card');
@@ -91,6 +92,28 @@ function addMessage(text, role, result, save = true) {
   if (save) saveHistory();
 }
 
+function createStreamingMessage() {
+  const div = document.createElement('div');
+  div.className = 'message assistant';
+  div.dataset.streaming = 'true';
+
+  const avatar = document.createElement('div');
+  avatar.className = 'avatar';
+  avatar.textContent = 'G';
+  div.appendChild(avatar);
+
+  const bubble = document.createElement('div');
+  bubble.className = 'bubble';
+  const content = document.createElement('div');
+  content.className = 'streaming-content';
+  bubble.appendChild(content);
+  div.appendChild(bubble);
+
+  messagesEl.appendChild(div);
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+  return { el: div, contentEl: content };
+}
+
 resetBtn.addEventListener('click', () => {
   if (!confirm('채팅 내역을 초기화하시겠습니까?')) return;
   messagesEl.innerHTML = '';
@@ -112,7 +135,7 @@ searchForm.addEventListener('submit', async (e) => {
   messagesEl.scrollTop = messagesEl.scrollHeight;
 
   try {
-    const res = await fetch('/api/v1/search', {
+    const res = await fetch('/api/v1/search/stream', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ query })
@@ -120,9 +143,46 @@ searchForm.addEventListener('submit', async (e) => {
 
     if (!res.ok) throw new Error('API error');
 
-    const result = await res.json();
     loadingMsg.remove();
-    addMessage('', 'assistant', result);
+
+    const { el: msgEl, contentEl } = createStreamingMessage();
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = '';
+    let streamingText = '';
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      buffer += decoder.decode(value, { stream: true });
+      const lines = buffer.split('\n');
+      buffer = lines.pop() || '';
+
+      for (const line of lines) {
+        if (!line.startsWith('data: ')) continue;
+        const data = line.slice(6);
+        if (data === '[DONE]') continue;
+        try {
+          const parsed = JSON.parse(data);
+          if (parsed.type === 'token') {
+            streamingText += parsed.content;
+            contentEl.textContent = streamingText;
+            messagesEl.scrollTop = messagesEl.scrollHeight;
+          } else if (parsed.type === 'result') {
+            delete msgEl.dataset.streaming;
+            contentEl.innerHTML = `
+              <div class="result-card">
+                <h3>${escapeHtml(parsed.result.name)}</h3>
+                <p><span class="label">추천 이유</span><br>${escapeHtml(parsed.result.reason)}</p>
+                <p><span class="label">사용 팁</span><br>${escapeHtml(parsed.result.tip)}</p>
+              </div>
+            `;
+            saveHistory();
+          }
+        } catch {}
+      }
+    }
   } catch {
     loadingMsg.remove();
     addMessage('죄송합니다. 요청을 처리할 수 없습니다. 다시 시도해주세요.', 'assistant');

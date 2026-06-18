@@ -62,7 +62,8 @@ CREATE POLICY "anon_all" ON agents FOR ALL USING (true) WITH CHECK (true);
 |--------|------|-------------|
 | GET | `/` | index.html (SPA) |
 | GET | `/api/agents` | 등록된 모든 AI 도구 목록 |
-| POST | `/api/v1/search` | AI 도구 추천 검색 |
+| POST | `/api/v1/search` | AI 도구 추천 검색 (비스트리밍) |
+| POST | `/api/v1/search/stream` | AI 도구 추천 검색 (SSE 스트리밍) |
 | POST | `/api/v1/admin/ai` | AI 도구 추가 |
 | DELETE | `/api/v1/admin/ai/:name` | AI 도구 삭제 |
 
@@ -80,6 +81,22 @@ CREATE POLICY "anon_all" ON agents FOR ALL USING (true) WITH CHECK (true);
 ```
 
 Groq AI가 DB의 agents 데이터를 system prompt에 넣어 가장 적합한 도구를 JSON으로 응답.
+비스트리밍은 `response_format: { type: 'json_object' }` 사용, 스트리밍은 `stream: true` 사용 (response_format 비호환).
+
+### POST /api/v1/search/stream (SSE)
+```json
+// Request
+{ "query": "이미지 생성하고 싶어요" }
+
+// SSE events (text/event-stream)
+data: {"type":"token","content":"{"}
+data: {"type":"token","content":"\\n  \"name\": \"Mi"}
+data: {"type":"token","content":"djourney\"..."}
+data: {"type":"result","result":{"name":"Midjourney","reason":"...","tip":"..."}}
+data: [DONE]
+```
+
+`type: "token"` 이벤트로 실시간 텍스트를 스트리밍하고, 최종 완료 시 `type: "result"` 이벤트로 파싱된 JSON을 전송. 프론트엔드는 토큰을 실시간 표시하다가 result 수신 시 카드 UI로 교체.
 
 ## 실행 방법
 ```bash

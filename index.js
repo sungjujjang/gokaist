@@ -94,6 +94,83 @@ Respond in JSON format only:
   }
 });
 
+app.post('/api/v1/search/stream', async (req, res) => {
+  try {
+    const { query, persona } = req.body;
+    if (!query) return res.status(400).json({ error: 'query is required' });
+
+    const agents = await db.getAllAgents();
+    const agentsInfo = agents.map(a => `${a.name}: ${a.great}`).join('\n');
+
+    let systemContent = `You are an AI tool recommendation expert. Given a user's needs, recommend the most suitable AI tool from the list below.
+
+Available AI tools:
+${agentsInfo}
+
+Respond in JSON format only (no markdown, no code fences):
+{
+  "name": "AI tool name (in Korean)",
+  "reason": "Why this tool is recommended (in Korean)",
+  "tip": "Usage tip for this tool (in Korean)"
+}`;
+
+    if (persona) {
+      systemContent = `You are an AI tool recommendation expert. Given a user's needs, recommend the most suitable AI tool from the list below.
+
+The user describes themselves as: ${persona}
+
+Available AI tools:
+${agentsInfo}
+
+Respond in JSON format only (no markdown, no code fences):
+{
+  "name": "AI tool name (in Korean)",
+  "reason": "Why this tool is recommended, considering the user's persona (in Korean)",
+  "tip": "Usage tip for this tool (in Korean)"
+}`;
+    }
+
+    res.setHeader('Content-Type', 'text/event-stream');
+    res.setHeader('Cache-Control', 'no-cache');
+    res.setHeader('Connection', 'keep-alive');
+
+    const stream = await groq.chat.completions.create({
+      model: 'llama-3.3-70b-versatile',
+      messages: [
+        { role: 'system', content: systemContent },
+        { role: 'user', content: query }
+      ],
+      stream: true,
+    });
+
+    let fullContent = '';
+    for await (const chunk of stream) {
+      const delta = chunk.choices[0]?.delta?.content || '';
+      if (delta) {
+        fullContent += delta;
+        res.write(`data: ${JSON.stringify({ type: 'token', content: delta })}\n\n`);
+      }
+    }
+
+    try {
+      const result = JSON.parse(fullContent);
+      res.write(`data: ${JSON.stringify({ type: 'result', result })}\n\n`);
+    } catch {
+      res.write(`data: ${JSON.stringify({ type: 'error', message: 'Failed to parse response' })}\n\n`);
+    }
+    res.write('data: [DONE]\n\n');
+    res.end();
+  } catch (err) {
+    console.error(err);
+    if (!res.headersSent) {
+      res.status(500).json({ error: 'Internal server error' });
+    } else {
+      res.write(`data: ${JSON.stringify({ type: 'error', message: 'Internal server error' })}\n\n`);
+      res.end();
+    }
+  }
+});
+
 app.post('/api/v1/admin/verify', (req, res) => {
   const { password } = req.body;
   if (password === adminPassword) {
