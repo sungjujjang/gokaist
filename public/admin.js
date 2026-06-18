@@ -149,10 +149,9 @@ addForm.addEventListener('submit', async (e) => {
   }
 });
 
-bulkForm.addEventListener('submit', async (e) => {
-  e.preventDefault();
+bulkBtn.addEventListener('click', async () => {
   const text = bulkText.value.trim();
-  if (!text) return;
+  if (!text) { showBulkMessage('텍스트를 입력해주세요.', 'error'); return; }
 
   bulkBtn.disabled = true;
   bulkBtn.textContent = '파싱 중...';

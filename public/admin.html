@@ -61,13 +61,13 @@
 
           <h2 style="margin-top:40px">AI 도구 일괄 추가</h2>
           <p class="bulk-desc">여러 AI 도구 정보를 한 번에 입력하세요. AI가 알아서 파싱해서 등록합니다.</p>
-          <form id="bulkForm" class="admin-form">
+          <div class="admin-form">
             <div class="form-group">
               <label for="bulkText">원본 텍스트</label>
               <textarea id="bulkText" placeholder="예시:&#10;ChatGPT - 범용 AI 비서로 글쓰기 코딩 분석 가능&#10;Claude: 긴 문서 분석에 강함&#10;Midjourney는 이미지 생성 최고"></textarea>
             </div>
-            <button type="submit" id="bulkBtn">AI 파싱 후 일괄 등록</button>
-          </form>
+            <button type="button" id="bulkBtn">AI 파싱 후 일괄 등록</button>
+          </div>
           <div id="bulkMessage" class="admin-message"></div>
         </div>
       </main>
