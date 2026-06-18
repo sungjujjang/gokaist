@@ -2,6 +2,10 @@
 
 AI 도구 추천 챗봇 서비스. 사용자가 작업 내용을 입력하면 Groq AI가 DB에 등록된 40여 개의 AI 도구 중 가장 적합한 것을 추천해준다.
 
+## Link
+
+[https://searchai.sungju.xyz](https://searchai.sungju.xyz)
+
 ## Features
 
 - **채팅 인터페이스** (`/`) — 질문을 입력하면 AI가 실시간 스트리밍으로 추천 결과를 응답
