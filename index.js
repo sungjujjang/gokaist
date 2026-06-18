@@ -193,6 +193,55 @@ app.post('/api/v1/admin/ai', requireAdmin, async (req, res) => {
   }
 });
 
+app.post('/api/v1/admin/ai/bulk', requireAdmin, async (req, res) => {
+  try {
+    const { text } = req.body;
+    if (!text) return res.status(400).json({ error: 'text is required' });
+
+    const completion = await groq.chat.completions.create({
+      model: 'llama-3.3-70b-versatile',
+      messages: [
+        {
+          role: 'system',
+          content: `You are a data extraction assistant. Parse the given text and extract AI tool information.
+Extract each tool's name and its strengths/description.
+Respond in JSON format only:
+{
+  "tools": [
+    { "name": "tool name", "great": "description of strengths" }
+  ]
+}
+
+Rules:
+- Infer the tool name and strengths even if the format is messy
+- If the text contains multiple tools, extract all of them
+- Name should be concise, great should describe what it's good at
+- Respond in Korean for the great field`
+        },
+        { role: 'user', content: text }
+      ],
+      response_format: { type: 'json_object' }
+    });
+
+    const parsed = JSON.parse(completion.choices[0].message.content);
+    const tools = Array.isArray(parsed.tools) ? parsed.tools : [];
+    if (tools.length === 0) return res.status(400).json({ error: 'No tools could be parsed from the input' });
+
+    let added = 0;
+    for (const tool of tools) {
+      if (tool.name && tool.great) {
+        await db.addAgent(tool.name.trim(), tool.great.trim());
+        added++;
+      }
+    }
+
+    res.json({ message: `${added}개의 AI 도구가 추가되었습니다`, count: added });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 app.delete('/api/v1/admin/ai/:name', requireAdmin, async (req, res) => {
   try {
     await db.deleteAgent(req.params.name);

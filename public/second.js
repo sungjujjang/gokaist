@@ -213,6 +213,7 @@ searchForm.addEventListener('submit', async (e) => {
 
 function renderAll() {
   renderHistory();
+  loadPersona();
 }
 
 renderAll();

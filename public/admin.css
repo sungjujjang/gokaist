@@ -153,6 +153,13 @@
   animation: fadeInItem 0.2s ease;
 }
 
+.bulk-desc {
+  font-size: 12px;
+  color: #999;
+  margin-bottom: 16px;
+  line-height: 1.5;
+}
+
 .admin-message.success {
   background: #e6f0e6;
   color: #2d6a4f;

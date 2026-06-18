@@ -12,6 +12,10 @@ const addForm = document.getElementById('addForm');
 const nameInput = document.getElementById('name');
 const greatInput = document.getElementById('great');
 const messageEl = document.getElementById('message');
+const bulkForm = document.getElementById('bulkForm');
+const bulkText = document.getElementById('bulkText');
+const bulkBtn = document.getElementById('bulkBtn');
+const bulkMessageEl = document.getElementById('bulkMessage');
 const logoutBtn = document.getElementById('logoutBtn');
 
 async function verifyToken() {
@@ -144,6 +148,50 @@ addForm.addEventListener('submit', async (e) => {
     showMessage('서버 오류', 'error');
   }
 });
+
+bulkForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const text = bulkText.value.trim();
+  if (!text) return;
+
+  bulkBtn.disabled = true;
+  bulkBtn.textContent = '파싱 중...';
+  bulkMessageEl.className = 'admin-message';
+
+  try {
+    const res = await fetch('/api/v1/admin/ai/bulk', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({ text })
+    });
+
+    if (res.ok) {
+      const data = await res.json();
+      showBulkMessage(data.message, 'success');
+      bulkText.value = '';
+      loadAgents();
+    } else if (res.status === 401) {
+      showLogin();
+    } else {
+      const err = await res.json();
+      showBulkMessage(err.error || '일괄 추가 실패', 'error');
+    }
+  } catch {
+    showBulkMessage('서버 오류', 'error');
+  } finally {
+    bulkBtn.disabled = false;
+    bulkBtn.textContent = 'AI 파싱 후 일괄 등록';
+  }
+});
+
+function showBulkMessage(text, type) {
+  bulkMessageEl.textContent = text;
+  bulkMessageEl.className = 'admin-message ' + type;
+  setTimeout(() => { bulkMessageEl.textContent = ''; }, 5000);
+}
 
 function showMessage(text, type) {
   messageEl.textContent = text;
