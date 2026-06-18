@@ -127,6 +127,8 @@ kubectl apply -f k8s/secrets.yaml
 # deployment + service는 별도 구성 필요
 ```
 
+![argocd](https://cdn.discordapp.com/attachments/1505222894764953733/1517117740270358681/image.png?ex=6a351d7f&is=6a33cbff&hm=069a1bff2984644369f4426004596fa0f5df4c6ebde5bf85071fed8da98cc1c4&)
+
 ## License
 
 ISC
