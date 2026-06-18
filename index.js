@@ -46,6 +46,11 @@ app.post('/api/v1/search', async (req, res) => {
     const { query, persona } = req.body;
     if (!query) return res.status(400).json({ error: 'query is required' });
 
+    const jailbreakPatterns = /(ignore\s+(all\s+)?(previous|above|below)\s+(instructions|prompts?|rules|directions|commands)|forget|override|system\s+prompt|you\s+are\s+(now|not\s+)|act\s+as|new\s+(rule|instruction|prompt)|instruction\s*:|\-\-prompt|탈옥|프롬프트.*무시|명령.*무시|이전.*지침.*무시|위.*지시.*무시|너는.*이제|지금부터.*너는)/i;
+    if (jailbreakPatterns.test(query) || (persona && jailbreakPatterns.test(persona))) {
+      return res.status(400).json({ error: 'Invalid input detected' });
+    }
+
     const agents = await db.getAllAgents();
     const agentsInfo = agents.map(a => `${a.name}: ${a.great}`).join('\n');
 
@@ -98,6 +103,11 @@ app.post('/api/v1/search/stream', async (req, res) => {
   try {
     const { query, persona } = req.body;
     if (!query) return res.status(400).json({ error: 'query is required' });
+
+    const jailbreakPatterns = /(ignore\s+(all\s+)?(previous|above|below)\s+(instructions|prompts?|rules|directions|commands)|forget|override|system\s+prompt|you\s+are\s+(now|not\s+)|act\s+as|new\s+(rule|instruction|prompt)|instruction\s*:|\-\-prompt|탈옥|프롬프트.*무시|명령.*무시|이전.*지침.*무시|위.*지시.*무시|너는.*이제|지금부터.*너는)/i;
+    if (jailbreakPatterns.test(query) || (persona && jailbreakPatterns.test(persona))) {
+      return res.status(400).json({ error: 'Invalid input detected' });
+    }
 
     const agents = await db.getAllAgents();
     const agentsInfo = agents.map(a => `${a.name}: ${a.great}`).join('\n');
@@ -197,6 +207,11 @@ app.post('/api/v1/admin/ai/bulk', requireAdmin, async (req, res) => {
   try {
     const { text } = req.body;
     if (!text) return res.status(400).json({ error: 'text is required' });
+
+    const jailbreakPatterns = /(ignore\s+(all\s+)?(previous|above|below)\s+(instructions| prompts?|rules|directions|commands)|forget|override|system\s+prompt|you\s+are\s+(now|not\s+)|act\s+as|new\s+(rule|instruction|prompt)|instruction\s*:|\-\-prompt|탈옥|프롬프트.*무시|명령.*무시|이전.*지침.*무시|위.*지시.*무시|너는.*이제|지금부터.*너는)/i;
+    if (jailbreakPatterns.test(text)) {
+      return res.status(400).json({ error: 'Invalid input detected' });
+    }
 
     const completion = await groq.chat.completions.create({
       model: 'llama-3.3-70b-versatile',
