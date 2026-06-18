@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gokaist - 관리자</title>
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/admin.css">
+</head>
+<body>
+  <div id="loginOverlay" class="login-overlay">
+    <div class="login-box">
+      <h1>Gokaist 관리자</h1>
+      <p class="login-error" id="loginError"></p>
+      <form id="loginForm">
+        <input id="passwordInput" type="password" placeholder="관리자 비밀번호" autofocus>
+        <button type="submit">로그인</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="container" id="adminContainer" style="display:none">
+    <aside class="sidebar">
+      <h1>Gokaist</h1>
+      <p class="subtitle">AI 도구 관리</p>
+      <div class="agents-section">
+        <h2>등록된 AI 도구</h2>
+        <div id="agents"></div>
+      </div>
+      <button id="logoutBtn" class="logout-btn">로그아웃</button>
+    </aside>
+    <main class="main">
+      <div class="admin-content">
+        <h2>AI 도구 추가</h2>
+        <form id="addForm" class="admin-form">
+          <div class="form-group">
+            <label for="name">이름</label>
+            <input id="name" type="text" placeholder="AI 도구 이름" required>
+          </div>
+          <div class="form-group">
+            <label for="great">장점</label>
+            <textarea id="great" placeholder="AI 도구의 장점을 입력하세요" required></textarea>
+          </div>
+          <button type="submit">추가</button>
+        </form>
+        <div id="message" class="admin-message"></div>
+      </div>
+    </main>
+  </div>
+  <script src="/admin.js"></script>
+</body>
+</html>

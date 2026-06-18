@@ -17,6 +17,20 @@ if (!groqApiKey) {
 }
 const groq = new Groq({ apiKey: groqApiKey });
 
+const adminPassword = process.env.ADMIN_PASSWORD;
+if (!adminPassword) {
+  console.error('ADMIN_PASSWORD environment variable is required');
+  process.exit(1);
+}
+
+function requireAdmin(req, res, next) {
+  const auth = req.headers.authorization;
+  if (!auth || !auth.startsWith('Bearer ') || auth.slice(7) !== adminPassword) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+  next();
+}
+
 app.get('/api/agents', async (req, res) => {
   try {
     const agents = await db.getAllAgents();
@@ -65,7 +79,16 @@ Respond in JSON format only:
   }
 });
 
-app.post('/api/v1/admin/ai', async (req, res) => {
+app.post('/api/v1/admin/verify', (req, res) => {
+  const { password } = req.body;
+  if (password === adminPassword) {
+    res.json({ success: true });
+  } else {
+    res.status(401).json({ error: 'Invalid password' });
+  }
+});
+
+app.post('/api/v1/admin/ai', requireAdmin, async (req, res) => {
   try {
     const { name, great } = req.body;
     if (!name || !great) return res.status(400).json({ error: 'name and great are required' });
@@ -78,7 +101,7 @@ app.post('/api/v1/admin/ai', async (req, res) => {
   }
 });
 
-app.delete('/api/v1/admin/ai/:name', async (req, res) => {
+app.delete('/api/v1/admin/ai/:name', requireAdmin, async (req, res) => {
   try {
     await db.deleteAgent(req.params.name);
     res.json({ message: 'AI tool deleted' });
@@ -86,6 +109,10 @@ app.delete('/api/v1/admin/ai/:name', async (req, res) => {
     console.error(err);
     res.status(500).json({ error: 'Internal server error' });
   }
+});
+
+app.get('/admin', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'admin.html'));
 });
 
 app.get('/{*path}', (req, res) => {
