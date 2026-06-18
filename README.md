@@ -1,4 +1,4 @@
-# SearchAI (Gokaist)
+# SearchAI
 
 AI 도구 추천 챗봇 서비스. 사용자가 작업 내용을 입력하면 Groq AI가 DB에 등록된 40여 개의 AI 도구 중 가장 적합한 것을 추천해준다.
 
