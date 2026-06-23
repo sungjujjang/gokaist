@@ -53,8 +53,8 @@ jobs:
       - name: Commit and Push GitOps Changes
         working-directory: gitops
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name "JANG SEONG JU"
+          git config user.email "printhelloworld0702@gmail.com"
 
           git add searchAI/deployment.yaml
 
