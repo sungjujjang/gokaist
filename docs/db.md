@@ -10,7 +10,7 @@
 
 ## Table: `agents`
 
-PostgreSQL은 unquoted identifier를 lowercase로 저장하므로, 테이블명과 컬럼명은 모두 소문자 `agents`로 통일한다.
+**PostgreSQL**은 unquoted identifier를 lowercase로 저장하므로, 테이블명과 컬럼명은 모두 소문자 `agents`로 통일한다.
 
 ### DDL
 
