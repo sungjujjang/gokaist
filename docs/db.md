@@ -2,7 +2,7 @@
 
 ## Stack
 
-- **Database**: Supabase (PostgreSQL)
+- **Database**: Supabase - (PostgreSQL)
 - **Client**: `@supabase/supabase-js` + `ws` (WebSocket for realtime)
 - **Table**: `agents` (단일 테이블)
 
