@@ -4,7 +4,7 @@
 
 - **Database**: Supabase - (PostgreSQL)
 - **Client**: `@supabase/supabase-js` + `ws` (WebSocket for realtime)
-- **Table**: `agents` (단일 테이블)
+- **Table**: `agents` (단일  테이블)
 
 ---
 
