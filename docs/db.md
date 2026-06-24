@@ -24,7 +24,7 @@ CREATE TABLE agents (
 ### Columns
 
 | Column | Type | Constraint | Description |
-|--------|------|-----------|-------------|
+|-------|------|-----------|-------------|
 | name | TEXT | PRIMARY KEY | AI 도구 이름 (예: ChatGPT, Midjourney) |
 | great | TEXT | NOT NULL | AI 도구의 주요 장점 설명 |
 
